@@ -10,7 +10,7 @@ public class SudokuModel {
 	}
 
 	public void set(int x, int y, int i) {
-		if (0 > x || x > 10 || 0 > y || y > 10) {
+		if (0 < x || x < 10 || 0 < y || y < 10) {
 			board[x][y] = i;
 		} else {
 			throw new IllegalArgumentException("Brädet får endast innehålla tal mellan 0-9");
@@ -35,7 +35,7 @@ public class SudokuModel {
 
 	public boolean solve(int x, int y) {
 		if (get(x, y) == 0) {
-			for (int i = 0; i < 9; i++) {
+			for (int i = 1; i < 10; i++) {
 				set(x, y, i);
 				if (solve(x, y)) {
 					return true;
