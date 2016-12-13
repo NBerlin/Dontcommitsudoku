@@ -36,36 +36,21 @@ public class SudokuModel {
 	}
 
 	public boolean solve(int x, int y) {
-		System.out.println("Solve!\t\tx: " + x + ", y: " + y + ", aosj: " + aosj++);
+		if(x == 0 && y == 9) 
+			return true;
 		
-		if(aosj == 100) {
-			printOut();
-			System.exit(0);
-		}
-
-		if (get(x, y) == 0) {
-			for (int i = 1; i < 10; i++) {
+		if(get(x, y) == 0) {
+			for(int i = 1; i < 10; i++) {
 				set(x, y, i);
-				if (solve(x, y)) {
+				if(isLegal(x, y) && solve((x + 1) % 9, y + x / 8)) {
 					return true;
 				}
 			}
+			
 			set(x, y, 0);
 			return false;
-
 		} else {
-			if (isLegal(x, y)) {
-				if (y == 8 && x == 8) {
-					return true;
-				} else if (x == 8) {
-					return solve(0, y + 1);
-				} else {
-					return solve(x + 1, y);
-				}
-
-			} else {
-				return false;
-			}
+			return solve((x + 1) % 9, y + x / 8);
 		}
 	}
 
@@ -74,7 +59,6 @@ public class SudokuModel {
 	}
 
 	public boolean legalLine(int n, boolean yolo) {
-		System.out.println("legalLine!\tn: " + n + ", yolo: " + yolo);
 		ArrayList<Integer> temp = new ArrayList<Integer>();
 		for (int i = 0; i < 9; i++) {
 			int tempbox;
@@ -97,8 +81,6 @@ public class SudokuModel {
 	}
 
 	public boolean legalSquare(int x, int y) {
-		System.out.println("legalSquare!\tx: " + x + ", y: " + y);
-		
 		int rad = (y / 3) * 3;
 		int col = (x / 3) * 3;
 
