@@ -3,6 +3,7 @@ package sudoku;
 import java.util.ArrayList;
 
 public class SudokuModel {
+	int aosj = 0;
 	private int[][] board;
 
 	public SudokuModel(int[][] board) {
@@ -10,7 +11,7 @@ public class SudokuModel {
 	}
 
 	public void set(int x, int y, int i) {
-		if (0 < x || x < 10 || 0 < y || y < 10) {
+		if (0 <= x && x < 9 && 0 <= y && y < 9) {
 			board[x][y] = i;
 		} else {
 			throw new IllegalArgumentException("Brädet får endast innehålla tal mellan 0-9");
@@ -30,10 +31,18 @@ public class SudokuModel {
 	}
 
 	public boolean solve() {
+
 		return solve(0, 0);
 	}
 
 	public boolean solve(int x, int y) {
+		System.out.println("Solve!\t\tx: " + x + ", y: " + y + ", aosj: " + aosj++);
+		
+		if(aosj == 100) {
+			printOut();
+			System.exit(0);
+		}
+
 		if (get(x, y) == 0) {
 			for (int i = 1; i < 10; i++) {
 				set(x, y, i);
@@ -61,22 +70,24 @@ public class SudokuModel {
 	}
 
 	public boolean isLegal(int x, int y) {
-		if (legalLine(y, false) && legalLine(x, true) && legalSquare(x, y)) {
-			return true;
-		}
-		return false;
-
+		return legalLine(y, false) && legalLine(x, true) && legalSquare(x, y);
 	}
 
 	public boolean legalLine(int n, boolean yolo) {
+		System.out.println("legalLine!\tn: " + n + ", yolo: " + yolo);
 		ArrayList<Integer> temp = new ArrayList<Integer>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 9; i++) {
 			int tempbox;
-			if (yolo == true) {
-				tempbox = get(i, n);
-			} else {
+
+			if (yolo) {
 				tempbox = get(n, i);
+			} else {
+				tempbox = get(i, n);
 			}
+
+			if (tempbox == 0)
+				continue;
+
 			if (temp.contains(tempbox)) {
 				return false;
 			}
@@ -86,15 +97,24 @@ public class SudokuModel {
 	}
 
 	public boolean legalSquare(int x, int y) {
+		System.out.println("legalSquare!\tx: " + x + ", y: " + y);
+		
 		int rad = (y / 3) * 3;
-		int inteRad = (x / 3) * 3;
+		int col = (x / 3) * 3;
+
 		ArrayList<Integer> temp = new ArrayList<Integer>();
-		for (int i = rad; i < rad + 3; i++) {
-			for (int j = inteRad; j < inteRad + 3; j++) {
+		for (int j = col; j < col + 3; j++) {
+			for (int i = rad; i < rad + 3; i++) {
+				
 				int tempbox = get(i, j);
-				if (tempbox != 0 && temp.contains(tempbox)) {
+
+				if (tempbox == 0)
+					continue;
+
+				if (temp.contains(tempbox)) {
 					return false;
 				}
+
 				temp.add(tempbox);
 			}
 		}
@@ -104,20 +124,21 @@ public class SudokuModel {
 	public void printOut() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				System.out.print(get(i, j) + "\t");
+				System.out.print(get(j, i) + "\t");
 			}
 			System.out.print("\n");
 		}
+		System.out.println(aosj);
 	}
 
 	public static void main(String[] args) {
 		// Hard sudoku
-		int[][] board = { { 1, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 9, 0, 0, 0, 0, 0 },
+		int[][] board = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
 		SudokuModel s = new SudokuModel(board);
-		 s.solve(); 
-			s.printOut();
-		
+		s.solve();
+		s.printOut();
+
 	}
 }
