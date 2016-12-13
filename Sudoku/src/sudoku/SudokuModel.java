@@ -3,7 +3,6 @@ package sudoku;
 import java.util.ArrayList;
 
 public class SudokuModel {
-	int aosj = 0;
 	private int[][] board;
 
 	public SudokuModel(int[][] board) {
@@ -110,7 +109,6 @@ public class SudokuModel {
 			}
 			System.out.print("\n");
 		}
-		System.out.println(aosj);
 	}
 
 	public static void main(String[] args) {
